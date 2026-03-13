@@ -869,7 +869,7 @@
                     Base de dados sobre sinistros de trânsito, organizada pela Autarquia de Trânsito e Transporte Urbano do Recife - CTTU com fonte integrada (multifonte). Analisada em 26/02/2026.
                   </p>
                   <div class="base-link">
-                    <a href="http://dados.recife.pe.gov.br/dataset/acidentes-de-transito-com-e-sem-vitimas/resource/29afbf42-a36c-475c-8b75-761e17e67679" target="_blank" rel="noopener noreferrer">
+                    <a href="https://dados.recife.pe.gov.br/dataset/acidentes-de-transito-com-e-sem-vitimas" target="_blank" rel="noopener noreferrer">
                       <span class="material-icons">open_in_new</span>Acesse aqui
                     </a>
                   </div>
