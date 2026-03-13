@@ -1,5 +1,3 @@
-# **Boletim Técnico 02 – Dados Abertos de Sinistros**
-
 # Boletim Técnico 02 – Dados Abertos de Sinistros
 
 ## Visão Geral
