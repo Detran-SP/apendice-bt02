@@ -1,45 +1,70 @@
 # **Boletim Técnico 02 – Dados Abertos de Sinistros**
 
-Apêndice: Organograma referencial das bases de dados analisadas.
+# Boletim Técnico 02 – Dados Abertos de Sinistros
 
-Página HTML estática que apresenta o conjunto de bases de dados nacionais e internacionais analisadas no âmbito do **Boletim Técnico 02 – Dados Abertos de Sinistros**, organizado pela Diretoria de Segurança Viária do Detran-SP.
+## Visão Geral
 
-## **Estrutura do conteúdo**
+Este projeto apresenta uma página HTML que organiza o **organograma referencial das bases de dados analisadas** no âmbito do Boletim Técnico 02 – Dados Abertos de Sinistros.  
 
-As bases analisadas são organizadas por escopo territorial:
+A página integra um conjunto de **bases nacionais e internacionais sobre sinistros e óbitos no trânsito**, organizadas por escopo territorial (mundial, nacional, estadual e municipal), contendo síntese de cada base e hiperlink de acesso às fontes originais.
 
-- Mundial
+O objetivo é oferecer uma **visualização estruturada das bases de dados utilizadas na análise exploratória do boletim**, facilitando a consulta e a replicação das fontes analisadas.
 
-- Nacional
+---
 
-- Estadual
+## Funcionalidades
 
-- Municipal
+- Organização das bases de dados analisadas por **escopo territorial**.
+- Apresentação do **nome da base, síntese do conteúdo e link de acesso**.
+- Interface HTML com **identidade visual institucional do Detran-SP**.
+- Navegação interativa por escopos territoriais através de **accordion expansível**.
+- Acesso direto às bases de dados analisadas.
 
-Cada base apresenta:
+---
 
-- Nome da base de dados
+## Uso
 
-- Síntese do conteúdo
+Abra o arquivo `index.html` em qualquer navegador.
 
-- Hiperlink de acesso à fonte original
+A página apresentará o **organograma referencial das bases analisadas**, permitindo navegar entre:
 
-## **Repositório**
+- Mundial  
+- Nacional  
+- Estadual  
+- Municipal  
 
+Cada base apresenta uma breve descrição e o link de acesso à fonte original.
 
-bt02-dados-abertos-sinistros
+---
 
-├── index.html
-
-└── README.md
-
-- `index.html` — página principal com a visualização do organograma das bases analisadas.
-
-**Visualização**
-
-O arquivo pode ser aberto diretamente em qualquer navegador: index.html
+## Estrutura do projeto
 
 
-A estrutura HTML, organização de layout e identidade visual foram adaptadas a partir do repositório original do projeto **Infosiga 4.0 – Roadmap**, utilizado como base para a construção da interface.
+├── index.html # Página principal com o organograma das bases analisadas
+├── README.md # Documentação do projeto
+└── LICENSE # Licença do projeto
 
-Repositório de referência:  https://github.com/detran-sp/infosiga-roadmap
+
+---
+
+## Referência da estrutura original
+
+A estrutura HTML, organização do layout e identidade visual foram adaptadas a partir do repositório:
+
+**Infosiga 4.0 – Roadmap**
+
+https://github.com/detran-sp/infosiga-roadmap
+
+---
+
+## Licença
+
+Este projeto está licenciado sob a **Licença GPL-3.0**.
+
+---
+
+## Contato
+
+Divisão de Estudos para Segurança no Trânsito – DETRAN-SP  
+
+📧 estudostransito@detran.sp.gov.br
