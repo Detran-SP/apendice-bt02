@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BT02 – Dados Abertos de Sinistros</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <style>
+    :root {
+      --fg: #005CA8;
+      --dark: #004077;
+      --lt: #A4CFED;
+      --bg-soft: #f4f8fc;
+      --line: #dce6f0;
+      --text-soft: #5f6368;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background: #fff;
+      color: #000;
+    }
+
+    .page-topbar {
+      height: 4px;
+      background: linear-gradient(90deg, var(--dark) 0%, var(--fg) 55%, var(--lt) 100%);
+    }
+
+    .main-content {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 2rem 2rem 3rem;
+    }
+
+    @media (max-width: 767.98px) {
+      .main-content {
+        padding: 1rem 1rem 2rem;
+      }
+    }
+
+    .identity-block {
+      border-bottom: 2px solid var(--lt);
+      padding-bottom: 1.75rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .section-title {
+      color: var(--fg);
+      border-bottom: 2px solid var(--lt);
+      padding-bottom: .5rem;
+      margin-bottom: 1.5rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .section-title .material-icons {
+      font-size: 1.3rem;
+    }
+
+    .accordion-item {
+      border: 1px solid var(--line) !important;
+      border-radius: 2em !important;
+      overflow: hidden;
+      margin-bottom: .9rem;
+      transition: box-shadow .2s;
+    }
+
+    .accordion-item:hover {
+      box-shadow: 0 2px 14px rgba(0,92,168,.10);
+    }
+
+    .accordion-button {
+      color: var(--fg);
+      font-weight: 700;
+      background: #fff;
+      padding: 1.2rem 1.75rem;
+      font-size: 1.02rem;
+    }
+
+    .accordion-button:not(.collapsed) {
+      background: linear-gradient(135deg, rgba(0,92,168,.06) 0%, #fff 70%);
+      color: var(--dark);
+      box-shadow: none;
+    }
+
+    .accordion-button:focus {
+      box-shadow: 0 0 0 .15rem rgba(0,92,168,.25);
+    }
+
+    .accordion-body {
+      padding: 1.6rem;
+    }
+
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(164, 207, 237, .28);
+      color: var(--dark);
+      border: 1px solid rgba(0,92,168,.10);
+      border-radius: 999px;
+      padding: .45rem .8rem;
+      font-size: .8rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .bases-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 1rem;
+    }
+
+    .base-card {
+      border: 1px solid var(--lt);
+      border-radius: 1rem;
+      background: #fff;
+      height: 100%;
+      transition: transform .2s, box-shadow .2s, border-color .2s;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .base-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,92,168,.13);
+      border-color: var(--fg);
+    }
+
+    .base-card-body {
+      padding: 1.1rem 1.1rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: .75rem;
+      height: 100%;
+    }
+
+    .base-header {
+      display: flex;
+      align-items: flex-start;
+      gap: .75rem;
+    }
+
+    .base-num {
+      width: 2.6rem;
+      height: 2.6rem;
+      min-width: 2.6rem;
+      background: linear-gradient(135deg, var(--fg) 0%, var(--dark) 100%);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1rem;
+      box-shadow: 0 4px 10px rgba(0,92,168,.28);
+      flex-shrink: 0;
+      margin-top: .1rem;
+    }
+
+    .base-title {
+      color: var(--dark);
+      font-weight: 700;
+      font-size: 1rem;
+      line-height: 1.3;
+      margin: 0;
+    }
+
+    .base-context {
+      color: var(--text-soft);
+      font-size: .94rem;
+      line-height: 1.5;
+      margin: 0;
+      flex-grow: 1;
+    }
+
+    .base-context strong {
+      color: var(--dark);
+      font-weight: 700;
+    }
+
+    .base-link {
+      margin-top: auto;
+      padding-top: .2rem;
+    }
+
+    .base-link a {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      text-decoration: none;
+      color: var(--fg);
+      font-weight: 700;
+      font-size: .92rem;
+    }
+
+    .base-link a:hover {
+      color: var(--dark);
+      text-decoration: underline;
+    }
+
+    .base-link .material-icons {
+      font-size: 1rem;
+    }
+
+    .identity-meta {
+      margin-top: .35rem;
+      color: #6c757d;
+      font-size: .92rem;
+      line-height: 1.45;
+    }
+
+    footer {
+      border-top: 2px solid var(--lt);
+      background: var(--bg-soft);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .identity-block,
+    #bt02 {
+      animation: fadeUp .4s ease both;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-topbar"></div>
+
+<main class="main-content">
+
+  <div class="identity-block">
+    <img
+      src="https://www.detran.sp.gov.br/702a783633529610cd8381ac4f5c7b5b.iix"
+      alt="Detran-SP"
+      height="48"
+      class="d-block mb-3"
+    >
+    <h1 class="h3 fw-bold mb-1" style="color:var(--dark)">BOLETIM TÉCNICO 02 ▸ Dados Abertos de Sinistros</h1>
+    <p class="mb-0 small text-muted">Apêndice: Organograma referencial das bases de dados analisadas</p>
+    <div class="identity-meta">
+      <div>Diretoria de Segurança Viária (DSV)</div>
+      <div>Coordenadoria Geral de Segurança Viária (CGSV)</div>
+      <div>Coordenadoria do Observatório de Segurança no Trânsito (COST)</div>
+      <div>Divisão de Estudos para Segurança no Trânsito (DESEG)</div>
+      <div>03/2026</div>
+    </div>
+  </div>
+
+  <section id="bt02" class="mb-5">
+    <h2 class="section-title d-flex align-items-center gap-2">
+      <span class="material-icons">search</span> Bases analisadas
+    </h2>
+
+    <div class="accordion" id="accBases">
+
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button
+            class="accordion-button"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#basesMundial"
+            aria-expanded="true"
+            aria-controls="basesMundial"
+          >
+            Escopo territorial ▸ Mundial
+          </button>
+        </h2>
+
+        <div id="basesMundial" class="accordion-collapse collapse show">
+          <div class="accordion-body">
+            <div class="meta-pill">1 base analisada</div>
+
+            <div class="bases-grid">
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">1</div>
+                    <h3 class="base-title">Global – OMS</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Banco de Dados de Mortalidade da Organização Mundial da Saúde.</strong>
+                    Base de dados sobre óbitos no trânsito, organizada pela OMS com dados do sistema de saúde. Analisada em 21/01/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://platform.who.int/mortality/themes/theme-details/topics/indicator-groups/indicator-group-details/MDB/road-traffic-accidents" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#basesNacional"
+            aria-expanded="false"
+            aria-controls="basesNacional"
+          >
+            Escopo territorial ▸ Nacional
+          </button>
+        </h2>
+
+        <div id="basesNacional" class="accordion-collapse collapse">
+          <div class="accordion-body">
+            <div class="meta-pill">20 bases analisadas</div>
+
+            <div class="bases-grid">
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">1</div>
+                    <h3 class="base-title">Argentina – Observatório Vial Nacional</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Observatorio Vial Nacional - Argentina.</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pela Dirección de Estadística Vial (DNOV – ANSV) - Secretaria de Transporte e Ministério de Economia com fonte integrada (multifonte). Analisada em 30/01/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://www.argentina.gob.ar/seguridadvial/observatoriovialnacional" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">2</div>
+                    <h3 class="base-title">Bolívia – Atlas de Seguridad Vial</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Siniestros de Tránsito – Estatísticas Oficiais (Atlas de Seguridad Vial / Anuário).</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pelo Observatorio Boliviano de Seguridad Ciudadana y Lucha Contra las Drogas (OBSCd) com fonte integrada (multifonte). Analisada em 02/02/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://obscd.mingobierno.gob.bo/pagina-lista-documento-cartografico" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">3</div>
+                    <h3 class="base-title">Brasil – ANTT</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Portal de Dados Abertos da ANTT.</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pela Agência Nacional de Transportes Terrestres - ANTT com dados de órgão de trânsito (administrativo). Analisada em 22/01/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://dados.antt.gov.br/pl/organization/agencia-nacional-de-transportes-terrestres-antt" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">4</div>
+                    <h3 class="base-title">Brasil – DNIT</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Dados Abertos do Departamento Nacional de Infraestrutura de Transportes.</strong>
+                    Base de dados sobre outros temas, organizada pelo DNIT - Departamento Nacional de Infraestrutura de Transportes com dados de órgão de trânsito (administrativo). Analisada em 22/01/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://servicos.dnit.gov.br/dadosabertos/organization/dnit" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">5</div>
+                    <h3 class="base-title">Brasil – PRF</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Portal de dados abertos da PRF.</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pela Policia Rodoviária Federal com dados da polícia/autoridade de trânsito. Analisada em 21/01/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://www.gov.br/prf/pt-br/acesso-a-informacao/dados-abertos/dados-abertos-da-prf" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">6</div>
+                    <h3 class="base-title">Brasil – RENAEST</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Registro Nacional de Acidentes e Estatísticas de Trânsito.</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pela Coordenação Geral de Sistemas, Informação e Estatística - Ministério dos Transportes com dados da polícia/autoridade de trânsito. Analisada em 22/01/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://dados.transportes.gov.br/dataset/renaest" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">7</div>
+                    <h3 class="base-title">Brasil – SIMU</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Sistema Nacional de Informações em Mobilidade Urbana - SIMU.</strong>
+                    Base de dados sobre óbitos no trânsito, com fonte integrada (multifonte). Analisada em 27/01/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://simu.cidades.gov.br/monitoramento-indicador-acidentes-de-transportes-municipal/" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">8</div>
+                    <h3 class="base-title">Chile – Observatório de Segurança Viária</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Observatorio de Seguridad Vial – Estadísticas de Siniestros de Tránsito de Chile.</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pela Comisión Nacional de Seguridad de Tránsito (CONASET) com dados da polícia/autoridade de trânsito. Analisada em 02/02/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://www.conaset.cl/biblioteca/" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">9</div>
+                    <h3 class="base-title">China – Statistical Yearbook</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>China Statistical Yearbook – Basic Statistics on Road Traffic Accidents.</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pelo National Bureau of Statistics of China (NBS) a partir de dados do Ministry of Public Security (fonte integrada/multifonte). Analisada em 30/01/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://www.stats.gov.cn/sj/ndsj/2025/indexeh.htm" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">10</div>
+                    <h3 class="base-title">Colômbia – ANSV</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Observatorio Nacional de Seguridad Vial – Estadísticas e Indicadores de Siniestros Viales (ANSV).</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pela Agencia Nacional de Seguridad Vial (ANSV) – Ministerio de Transporte com dados da polícia/autoridade de trânsito. Analisada em 03/02/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://geoportal-ansv-ansv.hub.arcgis.com/" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">11</div>
+                    <h3 class="base-title">Egito – Car &amp; Train Accidents</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Annual Bulletin – Results of Car &amp; Train Accidents.</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pela CAPMAS – Central Agency for Public Mobilization and Statistics com fonte integrada (multifonte). Analisada em 28/01/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://censusinfo.capmas.gov.eg/metadata-en-v4.2/index.php/catalog/749/overview" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">12</div>
+                    <h3 class="base-title">Equador – ESTRA</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Estadísticas de Transporte – Siniestros de Tránsito (ESTRA).</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pelo Instituto Nacional de Estadística y Censos (INEC) - Equador com dados de órgão de trânsito (administrativo). Analisada em 04/02/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://www.ecuadorencifras.gob.ec/transporte/" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">13</div>
+                    <h3 class="base-title">Índia – ADSI</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Accidental Deaths &amp; Suicides in India (ADSI) - 2023.</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pelo Centro Nacional de Informática (NIC), Ministério da Eletrônica e Tecnologia da Informação - Governo da Índia com fonte integrada (multifonte). Analisada em 27/01/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://www.data.gov.in/catalog/accidental-deaths-suicides-india-adsi-2023?page=3" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">14</div>
+                    <h3 class="base-title">México – ATUS</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Accidentes de Tránsito Terrestre en Zonas Urbanas y Suburbanas (ATUS) - méxico.</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pelo Instituto Nacional de Estadística y Geografía (INEGI) com fonte integrada (multifonte). Analisada em 27/01/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://en.www.inegi.org.mx/temas/accidentes/" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">15</div>
+                    <h3 class="base-title">Paraguai – Observatório Vial</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Observatorio Vial – Estadísticas de Siniestralidad Vial (Paraguay).</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pela Agencia Nacional de Tránsito y Seguridad Vial – ANTSV (Dirección de Observatorio Vial, Estadísticas y Registro de Datos – DOVERD) com fonte integrada (multifonte). Analisada em 04/02/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://antsv.gov.py/" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">16</div>
+                    <h3 class="base-title">Quênia – Road Traffic Crashes</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Kenya – Road Traffic Crashes 2012–2023.</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pelo World Bank (Development Data Group) a partir de dados do Ma3Route (observatório/pesquisa). Analisada em 29/01/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://microdata.worldbank.org/index.php/catalog/6249" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">17</div>
+                    <h3 class="base-title">Rússia – GIBDD</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Indicadores do Estado da Segurança do Trânsito Rodoviário (GIBDD).</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pelo Ministério do Interior da Federação Russa – GIBDD (Polícia de Trânsito) com dados da polícia/autoridade de trânsito. Analisada em 28/01/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="http://stat.gibdd.ru/" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">18</div>
+                    <h3 class="base-title">Turquia – TurkStat</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Estatísticas de Acidentes de Trânsito Rodoviário – Turquia (TurkStat, conjunto anual de tabelas).</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pelo Turkish Statistical Institute (TurkStat) com dados da polícia/autoridade de trânsito. Analisada em 28/01/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://data.tuik.gov.tr/Search/Search?text=traffic%20accidents" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">19</div>
+                    <h3 class="base-title">Uruguai – UNASEV</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Estadísticas de Siniestralidad Vial – Uruguay (Informes anuales y estudios UNASEV).</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pela Unidad Nacional de Seguridad Vial (UNASEV) – Presidencia de la República Oriental del Uruguay com fonte integrada (multifonte). Analisada em 03/02/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://www.gub.uy/unidad-nacional-seguridad-vial/comunicacion/publicaciones/carga-global-siniestros-transito-uruguay" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">20</div>
+                    <h3 class="base-title">Vietnã – Traffic accidents</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Traffic accidents by road type and region (E14.87 / E14.88).</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pela General Statistics Office of Vietnam (GSO) com dados de órgão de trânsito (administrativo). Analisada em 29/01/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://www.nso.gov.vn/en/px-web/?pxid=E1488&theme=Health%2C%20Culture%2C%20Sport%20and%20Living%20standard" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#basesEstadual"
+            aria-expanded="false"
+            aria-controls="basesEstadual"
+          >
+            Escopo territorial ▸ Estadual
+          </button>
+        </h2>
+
+        <div id="basesEstadual" class="accordion-collapse collapse">
+          <div class="accordion-body">
+            <div class="meta-pill">2 bases analisadas</div>
+
+            <div class="bases-grid">
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">1</div>
+                    <h3 class="base-title">Estado de São Paulo – Infosiga</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Infosiga – Sistema de Informações Gerenciais de Sinistros de Trânsito do Estado de São Paulo.</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pelo Governo do Estado de São Paulo – Secretaria de Gestão e Governo Digital (SGGD) / Detran-SP com dados da polícia/autoridade de trânsito. Analisada em 05/02/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://infosiga.detran.sp.gov.br/" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">2</div>
+                    <h3 class="base-title">SP – ARTESP Dados Abertos</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Portal de Dados Abertos da Agência Reguladora de Serviços Delegados de Transporte Público do Estado de São Paulo.</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pela Agência de Transportes do Estado de São Paulo – ARTESP com dados de órgão de trânsito (administrativo). Analisada em 21/01/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://dadosabertos.artesp.sp.gov.br/en/dataset/acidentes" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#basesMunicipal"
+            aria-expanded="false"
+            aria-controls="basesMunicipal"
+          >
+            Escopo territorial ▸ Municipal
+          </button>
+        </h2>
+
+        <div id="basesMunicipal" class="accordion-collapse collapse">
+          <div class="accordion-body">
+            <div class="meta-pill">8 bases analisadas</div>
+
+            <div class="bases-grid">
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">1</div>
+                    <h3 class="base-title">Belo Horizonte – Dados Abertos</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Dados Abertos da Prefeitura de Belo Horizonte.</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pela Prefeitura de Belo Horizonte / BHTrans com dados da polícia/autoridade de trânsito. Analisada em 23/02/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://dados.pbh.gov.br/dataset/?q=sinistros&organization=bhtrans" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">2</div>
+                    <h3 class="base-title">Campo Grande – Vítimas fatais</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Vítimas fatais de sinistros de trânsito em campo grande.</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pela Agência Municipal de Transporte e Trânsito – AGETRAN com dados do sistema de saúde. Analisada em 23/02/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://www.campogrande.ms.gov.br/agetran/estatisticas/" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">3</div>
+                    <h3 class="base-title">Curitiba – Programa Vida no Trânsito</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Programa Vida no Trânsito - Curitiba.</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pelo Instituto de Pesquisa e Planejamento Urbano de Curitiba com dados de órgão de trânsito (administrativo). Analisada em 23/02/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://geoapp.ippuc.org.br/AcidentesDeTransito/dashboard.html" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">4</div>
+                    <h3 class="base-title">Fortaleza – Plataforma VIDA</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Plataforma VIDA - Informação para gestão da segurança no trânsito.</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pela Prefeitura de Fortaleza com dados da polícia/autoridade de trânsito. Analisada em 23/01/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://vida.centralamc.com.br/mapa/sinistros" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">5</div>
+                    <h3 class="base-title">Porto Alegre – Acidentes de Trânsito</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Acidentes de trânsito - vítimas e acidentes.</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pela Equipe Armazém de Dados de Mobilidade - EAMOB/CIET com fonte integrada (multifonte). Analisada em 26/02/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://dadosabertos.poa.br/dataset/acidentes-de-transito-vitimas/resource/74d82607-9d6a-413c-811e-10e6df94fb7a" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">6</div>
+                    <h3 class="base-title">Recife – Chamados de Sinistros</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Chamados de Sinistros (Acidentes) de Trânsito com e sem vitimas 2015 a 2024.</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pela Autarquia de Trânsito e Transporte Urbano do Recife - CTTU com fonte integrada (multifonte). Analisada em 26/02/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="http://dados.recife.pe.gov.br/dataset/acidentes-de-transito-com-e-sem-vitimas/resource/29afbf42-a36c-475c-8b75-761e17e67679" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">7</div>
+                    <h3 class="base-title">Salvador – Estatísticas de Sinistros</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Estatísticas de Sinistros de Trânsito – Salvador.</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pela Prefeitura Municipal de Salvador – GEPRO / SIAT com dados de órgão de trânsito (administrativo). Analisada em 27/01/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://transonline.salvador.ba.gov.br/conteudo/index.php/estatisticaAcidente/acidenteComVitima" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="base-card">
+                <div class="base-card-body">
+                  <div class="base-header">
+                    <div class="base-num">8</div>
+                    <h3 class="base-title">São Paulo – GeoSampa</h3>
+                  </div>
+                  <p class="base-context">
+                    <strong>Acidentes de Trânsito com Vítimas – Município de São Paulo (GeoSampa).</strong>
+                    Base de dados sobre sinistros de trânsito, organizada pela Prefeitura do Município de São Paulo (PMSP) com fonte integrada (multifonte). Analisada em 27/01/2026.
+                  </p>
+                  <div class="base-link">
+                    <a href="https://geosampa.prefeitura.sp.gov.br/PaginasPublicas/_SBC.aspx" target="_blank" rel="noopener noreferrer">
+                      <span class="material-icons">open_in_new</span>Acesse aqui
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<footer class="py-3 text-center small text-muted">
+  <div class="container">
+    Diretoria de Segurança Viária
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
