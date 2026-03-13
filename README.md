@@ -1,10 +1,10 @@
-**Boletim Técnico 02 – Dados Abertos de Sinistros**
+# **Boletim Técnico 02 – Dados Abertos de Sinistros**
 
 Apêndice: Organograma referencial das bases de dados analisadas.
 
 Página HTML estática que apresenta o conjunto de bases de dados nacionais e internacionais analisadas no âmbito do **Boletim Técnico 02 – Dados Abertos de Sinistros**, organizado pela Diretoria de Segurança Viária do Detran-SP.
 
-**Estrutura do conteúdo**
+## **Estrutura do conteúdo**
 
 As bases analisadas são organizadas por escopo territorial:
 
@@ -24,16 +24,14 @@ Cada base apresenta:
 
 - Hiperlink de acesso à fonte original
 
-**Estrutura do repositório**
+## **Estrutura do repositório**
 
 
 bt02-dados-abertos-sinistros
-│
 
 ├── index.html
 
 └── README.md
-
 
 - `index.html` — página principal com a visualização do organograma das bases analisadas.
 
