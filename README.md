@@ -24,7 +24,7 @@ Cada base apresenta:
 
 - Hiperlink de acesso à fonte original
 
-## **Estrutura do repositório**
+## **Repositório**
 
 
 bt02-dados-abertos-sinistros
