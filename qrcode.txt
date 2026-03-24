@@ -1,0 +1,13 @@
+install.packages("qrcode")
+library(qrcode)
+
+url <- "https://detran-sp.github.io/apendice-bt02/"
+qr <- qr_code(url)
+
+# Exibir no console (plotagem)
+plot(qr)
+
+# Salvar como arquivo de imagem (PNG)
+png("qr_apendice_bt02.png", width = 400, height = 400)
+plot(qr)
+dev.off()
