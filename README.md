@@ -44,17 +44,6 @@ Cada base apresenta uma breve descrição e o link de acesso à fonte original.
 
 └── LICENSE # Licença do projeto
 
-
----
-
-## Referência da estrutura original
-
-A estrutura HTML, organização do layout e identidade visual foram adaptadas a partir do repositório:
-
-**Infosiga 4.0 – Roadmap**
-
-https://github.com/detran-sp/infosiga-roadmap
-
 ---
 
 ## Licença
